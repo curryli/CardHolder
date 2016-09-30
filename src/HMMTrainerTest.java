@@ -34,23 +34,35 @@ public class HMMTrainerTest {
 		HmmModel model;
 		 
 		int hiddenNum =4;
-		int obnum = 6;
+		int obnum = 10;
 		
 
-	    // initialize the initial probability vector  5个隐藏状态
-	    double[] initialP = {0.2, 0.1, 0.4, 0.3};
- 
+		double[] initialP = new double[hiddenNum];
+	    for(int i=0;i<hiddenNum;i++)
+	    	initialP[i] = (double)1/hiddenNum;		
 		
-	    // initialize the transition matrix	
-	    double[][] transitionA =  {{0.7, 0.1, 0.1,0.1}, {0.5, 0.1, 0.3 ,0.1},
-		        {0.1, 0.3, 0.1,0.5}, {0.0, 0.1, 0.8, 0.1}};
+	 
 		
- 
+		 double[][] transitionA = new double[hiddenNum][hiddenNum];
+		    for(int i=0;i<hiddenNum;i++){
+		    	double mrange =1;
+		    	for(int j=0;j<hiddenNum;j++){
+		    		if(j==hiddenNum-1)
+		    			transitionA[i][j] = mrange;
+		    		else{
+		    		transitionA[i][j] = Math.random()*mrange;
+		    		mrange = mrange-transitionA[i][j];
+		    		}
+		    	}
+		    }
+
+	
+		    double[][] emissionB = new double[hiddenNum][obnum];
+		    for(int i=0;i<hiddenNum;i++)
+		    	for(int j=0;j<obnum;j++){
+		    		emissionB[i][j] = (double)1/obnum;
+		    	}
 	    
-	    // initialize the emission matrix  //6个观测状态
-		    double[][] emissionB ={{0.6, 0.1, 0.1,0.2}, {0.5, 0.1, 0.3,0.1},
-			        {0.1, 0.6, 0.1,0.2}, {0.1,0.2, 0.1, 0.6}};
-		
  
 	
 	    // now generate the model
@@ -58,7 +70,7 @@ public class HMMTrainerTest {
 	        emissionB), new DenseVector(initialP));
 
 		
-	    String fileName = "SeqDictTest.txt";
+	    String fileName = "10test.txt";
 	    File file = new File(fileName);
         BufferedReader reader = null;
         try {

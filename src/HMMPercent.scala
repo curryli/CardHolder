@@ -42,7 +42,7 @@ object HMMPercent {
     
     
     val count = amountSorted.count() 
-    val splitnum = 4
+    val splitnum = 100
     val Q = new Array[Double](splitnum)
 
     
@@ -85,7 +85,7 @@ object HMMPercent {
     
     //println("tran ino string done.")
     
-    result.saveAsTextFile("xrli/SeqDict4")
+    result.saveAsTextFile("xrli/SeqDict100")
     //result.repartition(1).saveAsTextFile("xrli/NewSeqDict")
     //println("successfully.")
     sc.stop()
