@@ -28,7 +28,7 @@ object HMMPercent {
     Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
  
     // 设置运行环境
-    val conf = new SparkConf().setAppName("Kmeans")
+    val conf = new SparkConf().setAppName("HMMPercent")
     val sc = new SparkContext(conf)
  
       // 装载数据集
@@ -42,9 +42,11 @@ object HMMPercent {
     
     
     val count = amountSorted.count() 
-    val splitnum = 6
+    val splitnum = 4
     val Q = new Array[Double](splitnum)
 
+    
+    //求splitnum分位数
     Q(0) = 0;
     for (i <- 1 to splitnum-1) {
         Q(i) = if (count % splitnum*i == 0) {
@@ -62,12 +64,12 @@ object HMMPercent {
     
     val originfile = sc.textFile("xrli/GetFromHiveFile") 
     val sp = originfile.map{ line => 
-      val fields = line.split("\\001") 
+    val fields = line.split("\\001") 
+    if(fields.length==3 && !fields(1).contains("N")){                      //考虑数据不完整性以及NAN的数字情况
       val card = fields(0)
       val amount = rangeDict(fields(1).toDouble,Q)
-      
-      if(fields.length==3)
          (card,amount)
+      }
       else
          ("",0)
     }
@@ -83,7 +85,7 @@ object HMMPercent {
     
     //println("tran ino string done.")
     
-    result.saveAsTextFile("xrli/SeqDict")
+    result.saveAsTextFile("xrli/SeqDict4")
     //result.repartition(1).saveAsTextFile("xrli/NewSeqDict")
     //println("successfully.")
     sc.stop()
