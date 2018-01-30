@@ -1,0 +1,1 @@
+create table tbl_cardholder_consumptiontag_raw2_v2 as select card_num,cs_trx_amt_l6m,month_count,round(cs_trx_amt_l6m/month_count,2)as avg_amt from tbl_cardholder_consumptiontag_raw_v2;
