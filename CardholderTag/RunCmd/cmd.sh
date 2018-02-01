@@ -1,2 +1,4 @@
-#hadoop jar consumption.jar wangjun/cardholderTag/trans_new wangjun/cardholderTag/consumptionTag wangjun/cardbin/inCardBin wangjun/cardbin/inPlatinumCardPath 20150101 20150105
-hadoop jar consumption.jar /user/hddtmn/in_common_his_trans wangjun/cardholderTag/consumptionTag_v2 wangjun/cardbin/inCardBin wangjun/cardbin/inPlatinumCardPath 20150101 20150701
+hadoop jar ConsumptionScore.jar cardScore.ConsumptionDriven /user/hddtmn/in_common_his_trans xrli/CardholderTag/consumption_out xrli/CardholderTag/cardbin/inCardBin xrli/CardholderTag/cardbin/inPlatinumCardPath 20150101 20150201
+#这边的文件路径都是HDFS上的
+
+hadoop jar ConsumptionScore.jar cardScore.ScoreDriven xrli/CardholderTag/consumption_out xrli/CardholderTag/Score_out

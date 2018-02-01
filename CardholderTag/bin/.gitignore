@@ -1,0 +1,14 @@
+/com/
+/core-site.xml
+/hbase-env.sh
+/hbase-site.xml
+/hdfs-site.xml
+/jaas.conf
+/log4j.properties
+/mapred-site.xml
+/ssl-client.xml
+/yarn-site.xml
+/cardbin/
+/cups/
+/v2/
+/cardScore/
