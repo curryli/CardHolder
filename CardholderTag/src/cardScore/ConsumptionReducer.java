@@ -194,17 +194,17 @@ public class ConsumptionReducer extends Reducer<Text,Text,Text,Text>{
 		String month_record = "";
 		String  T_Trx_var_L6M = "99999999";								//近6月卡片广义消费金额波动率
 		
-		int cs_trx_amt_score = 0;
-		int cs_trx_unit_score = 0;
-		int cash_score = 0;
-		int cater_score = 0;
-		int hotel_score = 0;
-		int mall_score = 0;
-		int wholesale_score = 0;
-		int month_score = 0;
-		int var_score = 0;
-		int card_level_score = 0;
-		int score = 0;													//消费力指数
+//		int cs_trx_amt_score = 0;
+//		int cs_trx_unit_score = 0;
+//		int cash_score = 0;
+//		int cater_score = 0;
+//		int hotel_score = 0;
+//		int mall_score = 0;
+//		int wholesale_score = 0;
+//		int month_score = 0;
+//		int var_score = 0;
+//		int card_level_score = 0;
+//		int score = 0;													//消费力指数
 		String errorMsg = "";
 		
 		double avg_amt = 0d;
@@ -535,61 +535,64 @@ public class ConsumptionReducer extends Reducer<Text,Text,Text,Text>{
 		//================= 计算消费力指数score ==================
 		
 		
-		cs_trx_amt_score = this.getTrxAmtScore(cs_trx_amt_L6M);
-		cs_trx_unit_score = this.getTrxUnitScore(cs_trx_unit_L6M);
-		cash_score = this.getCashScore(cash_flag_L6M);
-		cater_score = this.getCaterScore(cater_flag_L6M);
-		hotel_score = this.getHotelScore(unit004_018_L6M);
-		mall_score = this.getMallScore(unit016_L6M);
-		wholesale_score = this.getWholesaleScore(unit001_002_L6M);
-		month_score = this.getMonthScore(T_No_Trx_M_L6M);
-		card_level_score = this.getCardLelScore(card_level);
-		
-		try{
-			var_score = this.getVarScore(Double.parseDouble(T_Trx_var_L6M));
-		}
-		catch(Exception e){
-			Counter countPrint = context.getCounter("++++++++ Error +++++++ T_Trx_var_L6M is:", T_Trx_var_L6M);
-	        countPrint.increment(1l);
-		}
-		finally{
-			errorMsg = T_Trx_var_L6M;
-			var_score = this.getVarScore(Double.parseDouble("999999"));
-		}
-		
-		
-		score = (cs_trx_amt_score*2)								//将总消费客的权重提升，去除批发类交易因素 
-				+ cs_trx_unit_score 
-				+ cash_score 
-				+ cater_score
-				+ hotel_score 
-				+ mall_score 
-//				+ wholesale_score 
-				+ month_score 
-				+ card_level_score 
-				+ var_score;
+//		cs_trx_amt_score = this.getTrxAmtScore(cs_trx_amt_L6M);
+//		cs_trx_unit_score = this.getTrxUnitScore(cs_trx_unit_L6M);
+//		cash_score = this.getCashScore(cash_flag_L6M);
+//		cater_score = this.getCaterScore(cater_flag_L6M);
+//		hotel_score = this.getHotelScore(unit004_018_L6M);
+//		mall_score = this.getMallScore(unit016_L6M);
+//		wholesale_score = this.getWholesaleScore(unit001_002_L6M);
+//		month_score = this.getMonthScore(T_No_Trx_M_L6M);
+//		card_level_score = this.getCardLelScore(card_level);
+//		
+//		try{
+//			var_score = this.getVarScore(Double.parseDouble(T_Trx_var_L6M));
+//		}
+//		catch(Exception e){
+//			Counter countPrint = context.getCounter("++++++++ Error +++++++ T_Trx_var_L6M is:", T_Trx_var_L6M);
+//	        countPrint.increment(1l);
+//		}
+//		finally{
+//			errorMsg = T_Trx_var_L6M;
+//			var_score = this.getVarScore(Double.parseDouble("999999"));
+//		}
+//		
+//		
+//		score = (cs_trx_amt_score*2)								//将总消费客的权重提升，去除批发类交易因素 
+//				+ cs_trx_unit_score 
+//				+ cash_score 
+//				+ cater_score
+//				+ hotel_score 
+//				+ mall_score 
+////				+ wholesale_score 
+//				+ month_score 
+//				+ card_level_score 
+//				+ var_score;
 		
 		//================= end 计算消费力指数score ==================
 		
 		sb.append(card_num+Constant.separator_1);
-		sb.append(card_md5+Constant.separator_1);									//MD5
-		sb.append(iss_ins_code+Constant.separator_1);								//发卡机构代码
-		sb.append(iss_ins_name+Constant.separator_1);								//发卡机构名称
-		sb.append(card_level+Constant.separator_1);									//卡等级
-		sb.append(cs_trx_amt_L6M+Constant.separator_1);
-//		sb.append(cs_trx_unit_L6M+Constant.separator_1);
-//		sb.append(cash_flag_L6M+Constant.separator_1);
-//		sb.append(cash_amt_L6M+Constant.separator_1);
-//		sb.append(cash_unit_L6M+Constant.separator_1);
-//		sb.append(cater_flag_L6M+Constant.separator_1);
-//		sb.append(unit004_018_L6M+Constant.separator_1);
-//		sb.append(unit016_L6M+Constant.separator_1);
-//		sb.append(unit001_002_L6M+Constant.separator_1);
-		sb.append(T_No_Trx_M_L6M+Constant.separator_1);
-//		sb.append(T_Trx_var_L6M+Constant.separator_1);
-//		sb.append(month_record+Constant.separator_1);
-//		sb.append(cs_trx_amt_score+Constant.separator_1);
-//		sb.append(cs_trx_unit_score+Constant.separator_1);
+		sb.append(card_md5+Constant.separator_1);	     //MD5
+		sb.append(iss_ins_code+Constant.separator_1);	 //发卡机构代码
+		sb.append(iss_ins_name+Constant.separator_1);	 //发卡机构名称
+		sb.append(card_level+Constant.separator_1);	      //卡等级
+		sb.append(cs_trx_amt_L6M+Constant.separator_1);   //近6月广义消费金额
+		sb.append(cs_trx_unit_L6M+Constant.separator_1);  //近6月广义消费笔数
+		sb.append(cash_flag_L6M+Constant.separator_1);    //近6月取现标记
+		sb.append(cash_amt_L6M+Constant.separator_1);     //近6月取现金额
+		sb.append(cash_unit_L6M+Constant.separator_1);    //近6月取现次数
+		sb.append(cater_flag_L6M+Constant.separator_1);   //近6月餐饮广义消费标记
+		sb.append(unit004_018_L6M+Constant.separator_1);  //近6月（宾馆+航空）广义消费笔数
+		sb.append(unit016_L6M+Constant.separator_1);      //近6月（日用百货）广义消费笔数
+		sb.append(unit001_002_L6M+Constant.separator_1);  //近6月（批发）广义消费笔数
+		sb.append(T_No_Trx_M_L6M+Constant.separator_1);  //近6月中有广义消费的月份数目
+		sb.append(T_Trx_var_L6M+Constant.separator_1);   //近6月卡片广义消费金额波动率
+		sb.append(month_record+Constant.separator_1);   //有消费月份记录
+		sb.append(avg_amt_L6M); //近6月广义月均消费金额
+		
+		//////////////////////////////////根据上面指标计算分数///////////////////////////////////
+//		sb.append(cs_trx_amt_score+Constant.separator_1);  //消费力金额指数score
+//		sb.append(cs_trx_unit_score+Constant.separator_1);   //消费力次数指数score
 //		sb.append(cash_score+Constant.separator_1);
 //		sb.append(cater_score+Constant.separator_1);
 //		sb.append(hotel_score+Constant.separator_1);
@@ -599,7 +602,7 @@ public class ConsumptionReducer extends Reducer<Text,Text,Text,Text>{
 //		sb.append(var_score+Constant.separator_1);
 //		sb.append(card_level_score+Constant.separator_1);
 //		sb.append(score+Constant.separator_1);
-		sb.append(avg_amt_L6M);
+	
 
 		context.write(new Text(sb.toString()), new Text(""));
 	}
