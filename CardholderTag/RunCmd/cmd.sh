@@ -5,5 +5,6 @@ hadoop jar ConsumptionScore.jar cardScore.ScoreDriven xrli/CardholderTag/consump
 
 
 GeneralAPI 命令：
-hadoop jar consumptionScore.jar GeneralAPI.CardDriven /user/hddtmn/in_common_his_trans xrli/CardholderTag/GeneralAPI_out 20180101 20180201
+hadoop fs -rm -r xrli/CardholderTag/GeneralAPI_out
+hadoop jar consumptionScore.jar GeneralAPI.CardDriven /user/hddtmn/in_common_his_trans xrli/CardholderTag/GeneralAPI_out_last3 20171101 20180131
 

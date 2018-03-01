@@ -82,6 +82,7 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 		String platinumCardFlg = "0";									// 白金卡卡号标识
 		int cs_trx_unit_L6M = 0;										//广义消费笔数
 		double  cs_trx_amt_L6M = 0d;								    //广义消费金额
+		int has_trans_date = 0;											//有广义消费的日期数目
 		int T_No_Trx_M_L6M = 0;											//有广义消费的月份数目
 		String month_record = "";										//有消费的月份记录
 		String avg_amt_L6M = "";										//月均消费金额
@@ -113,7 +114,8 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 		//=================计算广义消费金额 、广义消费笔数、消费月份数、商户类别数、月均 消费笔数==================
 		
 		if(list.size()>0){
-			HashSet set = new HashSet();//有消费的月份集合
+			HashSet dateSet = new HashSet();//有消费的日期集合
+			HashSet monthSet = new HashSet();//有消费的月份集合
 			HashSet merchantSet = new HashSet();//商户类别数
 			StringBuilder monthSb = new StringBuilder();
 			HashMap<String, Double> month_amt_map = new HashMap<String, Double>();
@@ -179,14 +181,16 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 					}
 				}
 				
-				set.add(item.getMonth());
+				dateSet.add(item.getDate());
+				monthSet.add(item.getMonth());
 				merchantSet.add(item.getMcc());
 			}
 			
-			T_No_Trx_M_L6M = set.size();								//有消费月份数
+			has_trans_date = dateSet.size();								//有消费日期数
+			T_No_Trx_M_L6M = monthSet.size();								//有消费月份数
 			merchant_count = merchantSet.size();						//商户类别数
 			
-			Iterator it = set.iterator();
+			Iterator it = monthSet.iterator();
 			while(it.hasNext()){
 				monthSb.append((String)it.next()+Constant.separator_2);
 			}
@@ -217,9 +221,10 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 		sb.append(card_num+Constant.separator_1); 						//[0]卡号
 		sb.append(cs_trx_unit_L6M+Constant.separator_1); 				//[1]消费总笔数
 		sb.append(cs_trx_amt_L6M+Constant.separator_1); 				//[2]消费总金额
-		sb.append(T_No_Trx_M_L6M+Constant.separator_1);					//[3]有消费的月份数 
-		sb.append(avg_amt_L6M+Constant.separator_1);					//[4]月均消费金额
-		sb.append(merchant_count+Constant.separator_1);					//[5]商户类别数
+		sb.append(has_trans_date+Constant.separator_1);					//[3]有消费的日期数 
+		sb.append(T_No_Trx_M_L6M+Constant.separator_1);					//[4]有消费的月份数 
+		sb.append(avg_amt_L6M+Constant.separator_1);					//[5]月均消费金额
+		sb.append(merchant_count+Constant.separator_1);					//[6]商户类别数
 		
 		context.write(new Text(sb.toString()), new Text(""));
 	}
@@ -235,6 +240,7 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 		private String time;						//消费时间
 		private String year;						//年
 		private String month;						//月份
+		private String date;                       //日期
 		private double  trans_at = 0;						//消费金额
 		private String acptIns;						//受理机构
 		private String locationCd;					//地区代码
@@ -274,6 +280,7 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 			//this.year = time.substring(0,4);
 			this.year = "";
 			this.month = time.substring(0,6);                           // 例：201501 ++++++++++++++
+			this.date = time.substring(0,8);                           // 例：20150101 ++++++++++++++
 			
 			if(!tokens[15].trim().equals("") || !tokens[15].trim().equals(null))
 				this.trans_at = Double.parseDouble (tokens[15].trim())/100;
@@ -363,6 +370,10 @@ public class CardReducer extends Reducer<Text,Text,Text,Text>{
 			this.year = year;
 		}
 
+		public String getDate() {
+			return date;
+		}
+		
 		public String getMonth() {
 			return month;
 		}
