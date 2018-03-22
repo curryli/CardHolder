@@ -38,10 +38,11 @@ FIELDS TERMINATED BY ','
 stored as textfile;
 
 insert overwrite table General_valuable
-select * from GeneralAPI_last3 where total_cnt>=5 and total_money>=10000 and has_trans_date>=6 and has_trans_month>=3 and avg_amt_m>=1358 and mcc_tps>=4;
+select * from GeneralAPI_last3 where total_cnt>=10 and total_money>=100000 and total_money/total_cnt>=10000 and has_trans_date>=5 and avg_amt_m>=10000 and mcc_tps>=5;
 
 
-select count(distinct(card)) from GeneralAPI_last3;
+
+select count(distinct(card)) from GeneralAPI_last3;  1029473756
 select count(*) from General_valuable;     65027540
 
 
