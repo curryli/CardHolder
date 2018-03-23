@@ -350,3 +350,81 @@ left semi join
 						 group by card_accptr_nm_addr order by cd_cnt desc limit 100;
 						 
  
+ 
+ 
+
+drop table mcd_mname2;
+create table mcd_mname2 as
+SELECT mchnt_cd, card_accptr_nm_addr FROM sh_railway_mchnt_test_v1 group by mchnt_cd, card_accptr_nm_addr;
+
+
+
+
+select card_accptr_nm_addr,mchnt_cd from sh_railway_mchnt_test_v1
+
+
+
+
+select distinct(card_accptr_nm_addr),  mchnt_cd, cd_cnt from(
+select mcd_mname2.card_accptr_nm_addr, Rank.mchnt_cd, Rank.cd_cnt from
+(
+select mchnt_cd,count(*) as cd_cnt from
+(select A.* from sh_railway_mchnt_test_v1 A
+left semi join
+(select distinct(pri_acct_no_conv) from sh_railway_mchnt_test_v1 where mchnt_cd IN ('102310041110010',
+                         '102310041110011',
+                         '102310041110012',
+                         '104310041119134',
+                         '104310041119135',
+                         '104310041119136',
+                         '105290000025237',
+                         '105290000025238',
+                         '105290000025239',
+                         '105290000025240',
+                         '113310041110003',
+                         '113310041110004',
+                         '113310041110005',
+                         '113310041110006',
+                         '301310041310009',
+                         '301310041310010',
+                         '301310041310011',
+                         '301310041310011') )B
+						 on A.pri_acct_no_conv = B.pri_acct_no_conv)C
+						 group by mchnt_cd order by cd_cnt desc limit 1000
+) Rank
+left join mcd_mname2 on Rank.mchnt_cd = mcd_mname2.mchnt_cd
+) AA order by cd_cnt desc
+
+
+
+select distinct(card_accptr_nm_addr),  mchnt_cd, trans_num from(
+select mcd_mname2.card_accptr_nm_addr, Rank.mchnt_cd, Rank.trans_num from
+(
+select *
+from (
+select  mchnt_cd,card_accptr_nm_addr,count(*) as trans_num
+from sh_railway_mchnt_test_v4
+where ls_mchnt_cd in ("105290000025237","105290000025238","105290000025239","105290000025240","301310041310009","301310041310010","113310041110003","113310041110004","113310041110005","113310041110006","104310041119134","104310041119135","104310041119136","102310041110010","102310041110011","102310041110012","301310041310011")
+group by mchnt_cd,card_accptr_nm_addr
+)a order by trans_num desc limit 1000) 
+Rank
+left join mcd_mname2 on Rank.mchnt_cd = mcd_mname2.mchnt_cd
+) AA order by trans_num desc
+
+
+
+
+
+select distinct(card_accptr_nm_addr),  ls_mchnt_cd, trans_num from(
+select mcd_mname2.card_accptr_nm_addr, Rank.ls_mchnt_cd, Rank.trans_num from
+(
+select *
+from (
+select ls_mchnt_cd,ls_card_accptr_nm_addr,count(*) as trans_num
+from sh_railway_mchnt_test_v4
+where mchnt_cd in ("105290000025237","105290000025238","105290000025239","105290000025240","301310041310009","301310041310010","113310041110003","113310041110004","113310041110005","113310041110006","104310041119134","104310041119135","104310041119136","102310041110010","102310041110011","102310041110012","301310041310011")
+group by ls_mchnt_cd,ls_card_accptr_nm_addr
+)a order by trans_num desc limit 1000) 
+Rank
+left join mcd_mname2 on Rank.ls_mchnt_cd = mcd_mname2.mchnt_cd
+) AA order by trans_num desc
