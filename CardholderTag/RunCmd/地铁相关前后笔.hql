@@ -321,4 +321,32 @@ where mchnt_cd in ("105290000025237","105290000025238","105290000025239","105290
 group by mchnt_cd;
 
 
+
+
+
+
+select card_accptr_nm_addr,count(*) as cd_cnt from
+(select A.* from sh_railway_mchnt_test_v1 A
+left semi join
+(select distinct(pri_acct_no_conv) from sh_railway_mchnt_test_v1 where mchnt_cd IN ('102310041110010',
+                         '102310041110011',
+                         '102310041110012',
+                         '104310041119134',
+                         '104310041119135',
+                         '104310041119136',
+                         '105290000025237',
+                         '105290000025238',
+                         '105290000025239',
+                         '105290000025240',
+                         '113310041110003',
+                         '113310041110004',
+                         '113310041110005',
+                         '113310041110006',
+                         '301310041310009',
+                         '301310041310010',
+                         '301310041310011',
+                         '301310041310011') )B
+						 on A.pri_acct_no_conv = B.pri_acct_no_conv)C
+						 group by card_accptr_nm_addr order by cd_cnt desc limit 100;
+						 
  
