@@ -428,3 +428,86 @@ group by ls_mchnt_cd,ls_card_accptr_nm_addr
 Rank
 left join mcd_mname2 on Rank.ls_mchnt_cd = mcd_mname2.mchnt_cd
 ) AA order by trans_num desc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///整体营销LPA
+use  00012900_shanghai;
+drop table xrli_test_v1;
+create table xrli_test_v1 as
+SELECT pri_acct_no_conv,
+	   pdate,
+       mchnt_tp,
+       mchnt_cd,
+       card_accptr_nm_addr,
+       concat('2018',tfr_dt_tm) AS tfr_dt_tm,
+       to_ts,
+       lag(concat('2018',tfr_dt_tm),1,"") over (partition BY pri_acct_no_conv
+                                                ORDER BY tfr_dt_tm) AS ls_tfr_dt_tm,
+       lag(mchnt_tp,1,"") over (partition BY pri_acct_no_conv
+                                ORDER BY tfr_dt_tm) AS ls_mchnt_tp,
+       lag(mchnt_cd,1,"") over (partition BY pri_acct_no_conv
+                                ORDER BY tfr_dt_tm) AS ls_mchnt_cd,
+       lag(card_accptr_nm_addr,1,"") over (partition BY pri_acct_no_conv
+                                           ORDER BY tfr_dt_tm) AS ls_card_accptr_nm_addr
+FROM `00012900_shanghai`.tbl_common_his_trans_success_parquet
+WHERE pdate>='20180201' and pdate<='20180203';
+
+
+
+drop table xrli_test_v2;
+create table xrli_test_v2 as
+SELECT
+      pri_acct_no_conv,
+      mchnt_cd,
+      ls_mchnt_cd,
+      round(( unix_timestamp(tfr_dt_tm,'yyyyMMddHHmmss')-unix_timestamp(ls_tfr_dt_tm,'yyyyMMddHHmmss'))/60) as time_diff
+FROM xrli_test_v1
+WHERE ls_tfr_dt_tm!='' AND mchnt_cd!=ls_mchnt_cd
+having time_diff<=360;
+
+select * from xrli_test_v2 limit 10;
+
+
+
+
+
+
+
+
+use  00012900_shanghai;
+drop table xrli_market_test;
+create table xrli_market_test as
+SELECT pri_acct_no_conv,
+       mchnt_cd,
+	   pdate,
+	   mchnt_tp,
+       to_ts
+FROM `00012900_shanghai`.tbl_common_his_trans_success_parquet
+WHERE pdate>='20180201' and pdate<='20180203';
+
+select * from xrli_market_test limit 10;
+
